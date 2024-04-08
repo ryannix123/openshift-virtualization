@@ -21,3 +21,6 @@ You'll want some kind of DNS name for your cluster. I use Cloudflare to manage m
 ## Setting up the network
 
 You'll want to use a DHCP reservation on your router. Make sure ports 443 and 6443 are open to your Single Node OpenShift's IP.
+
+## Patching the cluster to use local storage
+The instructions are in the video, and I have a storage folder that contains the commands you'll run to patch the container storage to use the [LVM Storage.](https://docs.openshift.com/container-platform/4.15/storage/persistent_storage/persistent_storage_local/persistent-storage-using-lvms.html)

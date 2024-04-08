@@ -1,17 +1,26 @@
+## Download certbot so that you can request a wildcard certificate for your domain. Let's Encrypt certificates last 90 days
+
 certbot -d '*.apps.sno.openshifthelp.com' --manual --preferred-challenges dns certonly --config-dir ~/Desktop/SNO\ Deployment/lets-encrypt --work-dir ~/Desktop/SNO\ Deployment/lets-encrypt --logs-dir ~/Desktop/SNO\ Deployment/lets-encrypt
+
+## We need to create a configmap based on issued certificate
 
 oc create configmap letsencrypt-ca-062529 \
      --from-file=ca-bundle.crt="/Users/rnix/Desktop/SNO Deployment/lets-encrypt/live/apps.sno.openshifthelp.com-0001/fullchain.pem" \
      -n openshift-config
 
+## Next, we patch the OpenShift Proxy to use the new certificate. 
 oc patch proxy/cluster \
      --type=merge \
      --patch='{"spec":{"trustedCA":{"name":"letsencrypt-ca-062529"}}}'
+
+## We need to create a Kubernetes secret based on the certificate 
 
 oc create secret tls letsencrypt-ca-secret-062529 \
      --cert="/Users/rnix/Desktop/SNO Deployment/lets-encrypt/live/apps.sno.openshifthelp.com-0001/fullchain.pem" \
      --key="/Users/rnix/Desktop/SNO Deployment/lets-encrypt/live/apps.sno.openshifthelp.com-0001/privkey.pem" \
      -n openshift-ingress
+
+## Finally, we patch the OpenShift ingress to use the Let's Encrypt certificate
 
 oc patch ingresscontroller.operator default \
      --type=merge -p \

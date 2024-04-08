@@ -1,4 +1,4 @@
-# CREATE PVC
+# CREATE PVC. Replace the storageClassName with the name of your Storageclass.
 oc create -f - <<EOF
 kind: PersistentVolumeClaim
 apiVersion: v1

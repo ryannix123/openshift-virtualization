@@ -1,0 +1,15 @@
+apiVersion: lvm.topolvm.io/v1alpha1
+kind: LVMCluster
+metadata:
+  name: my-lvmcluster
+spec:
+  storage:
+    deviceClasses:
+    - name: lvm-storage
+      deviceSelector:
+        paths:
+        - /dev/nvme1n1
+      thinPoolConfig:
+        name: thin-pool-1
+        sizePercent: 90
+        overprovisionRatio: 10

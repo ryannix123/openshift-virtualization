@@ -1,0 +1,19 @@
+certbot -d '*.apps.sno.openshifthelp.com' --manual --preferred-challenges dns certonly --config-dir ~/Desktop/SNO\ Deployment/lets-encrypt --work-dir ~/Desktop/SNO\ Deployment/lets-encrypt --logs-dir ~/Desktop/SNO\ Deployment/lets-encrypt
+
+oc create configmap letsencrypt-ca-062529 \
+     --from-file=ca-bundle.crt="/Users/rnix/Desktop/SNO Deployment/lets-encrypt/live/apps.sno.openshifthelp.com-0001/fullchain.pem" \
+     -n openshift-config
+
+oc patch proxy/cluster \
+     --type=merge \
+     --patch='{"spec":{"trustedCA":{"name":"letsencrypt-ca-062529"}}}'
+
+oc create secret tls letsencrypt-ca-secret-062529 \
+     --cert="/Users/rnix/Desktop/SNO Deployment/lets-encrypt/live/apps.sno.openshifthelp.com-0001/fullchain.pem" \
+     --key="/Users/rnix/Desktop/SNO Deployment/lets-encrypt/live/apps.sno.openshifthelp.com-0001/privkey.pem" \
+     -n openshift-ingress
+
+oc patch ingresscontroller.operator default \
+     --type=merge -p \
+     '{"spec":{"defaultCertificate": {"name": "letsencrypt-ca-secret-062529"}}}' \
+     -n openshift-ingress-operator

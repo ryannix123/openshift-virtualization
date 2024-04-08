@@ -1,0 +1,36 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+  uid: 523bd4c0-6386-49b2-8b93-ab3c1cfdd4da
+  resourceVersion: '248910'
+  creationTimestamp: '2022-04-20T15:33:32Z'
+  managedFields:
+    - manager: kubectl-create
+      operation: Update
+      apiVersion: v1
+      time: '2022-04-20T15:33:32Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:data': {}
+    - manager: Mozilla
+      operation: Update
+      apiVersion: v1
+      time: '2022-04-20T16:26:25Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:data':
+          'f:config.yaml': {}
+data:
+  config.yaml: |
+    prometheusK8s: 
+      volumeClaimTemplate:
+       spec:
+         storageClassName: lvms-lvm-storage
+         volumeMode: Filesystem
+         resources:
+           requests:
+             storage: 40Gi
+    techPreviewUserWorkload:
+      enabled: true
